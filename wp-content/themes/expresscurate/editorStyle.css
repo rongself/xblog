@@ -1,0 +1,90 @@
+@font-face
+{
+  font-family: OpenSans-Light;
+  src: url('fonts/open-sans/OpenSans-Light.eot');
+  src: url('fonts/open-sans/OpenSans-Light.eot?#iefix') format('embedded-opentype'),
+    url('fonts/open-sans/OpenSans-Light.ttf') format('truetype');
+}
+
+blockquote ul, ol {
+  padding-left: 40px;
+}
+
+blockquote {
+  position: relative;
+  padding: 0 25px;
+  margin: 0 0 30px 0;
+}
+
+blockquote > * {
+  margin-left: 10px;
+}
+
+blockquote > *:first-child {
+  padding-top: 20px;
+}
+
+blockquote:before {
+  left: 0 ;
+  top: -5px ;
+  width: 12px;
+  height: 23px;
+  position: absolute;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: 0 -965px;
+  background-image: url('images/sprite.png');
+  content: "";
+}
+
+blockquote:after {
+  right: 0;
+  bottom: -10px;
+  width: 12px;
+  height: 27px;
+  text-align: right;
+  position: absolute;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url('images/sprite.png');
+  background-position: 0 -229px;
+  content: "";
+}
+.mceContentBody  a{
+	color:#25bfa1;
+	text-decoration:underline;
+}
+.contentTags{
+	font-style:italic;
+	text-decoration:none;
+}
+.mceContentBody  {
+	text-align: justify;
+	font-family: "OpenSans-Light";
+	font-size: 15px;
+	line-height: 24px;
+	color: #181818;
+}
+.mceContentBody li{
+	margin-bottom: 10px;
+}
+.mceContentBody  ul{
+	padding-left: 20px;
+}
+/*new added*/
+img.alignleft{
+    margin: 5px 10px 5px 0;
+}
+img.alignright{
+    margin: 5px 0 5px 10px;
+}
+img.sizeS{
+    max-width: 200px;
+}
+img.sizeM{
+    max-width: 360px;
+}
+img.sizeX{
+    max-width: 100%;
+}
+/**/
