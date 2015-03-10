@@ -2,3 +2,5 @@ wp-config.php
 .idea
 wp-content/uploads/*
 wp-content/cache/*
+wp-content/plugins/wp-github/cache/*
+wp-content/w3tc-config/master.php
