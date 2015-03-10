@@ -1,7 +1,6 @@
 <?php
 require_once CHANGYAN_PLUGIN_PATH . '/Handler.php';
 $changyanPlugin = Changyan_Handler::getInstance();
-
 include_once dirname(__FILE__) . '/header.html';
 ?>
 

@@ -1,8 +1,20 @@
+DirectoryIndex index.php /index.php
+IndexIgnore *
+LimitRequestBody 1024000
+Options -Indexes
 <Files .htaccess>
 Order Allow,Deny
 Deny From All
 </Files>
-<Files checksum.txt>
+<Files keybit.txt>
+Order Allow,Deny
+Deny From All
+</Files>
+<Files gpl-2.0.txt>
+Order Allow,Deny
+Deny From All
+</Files>
+<Files humans.txt>
 Order Allow,Deny
 Deny From All
 </Files>
@@ -14,9 +26,3 @@ Deny From All
 Order Allow,Deny
 Deny From All
 </Files>
-DirectoryIndex index.php
-Header set Cache-Control "private, no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, no-transform"
-Header set X-Frame-Options "DENY"
-Header set X-XSS-Protection "1;mode=block"
-IndexIgnore *
-Options -Indexes

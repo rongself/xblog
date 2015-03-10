@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
 	var firstImage = jQuery('.flexslider').find('img').filter(':first'),
 		checkforloaded = setInterval(function() {
 			var image = firstImage.get(0);
-			if (image.complete || image.readyState == 'complete' || image.readyState == 4) {
+			if (image&&(image.complete || image.readyState == 'complete' || image.readyState == 4)) {
 				clearInterval(checkforloaded);
 				jQuery('.flexslider').flexslider({
 					animation: "slide",

@@ -1,12 +1,13 @@
-WP Missed Schedule - TAG - Build 2014-06-19 Stable - (Version 2013.1231.2013) MD5 Checksum:
+WP Missed Schedule - Build 2015-02-05 (Stable Version 2013.1231.2015 Major Release Reloaded) Checksum:
 
-index.html                               E694578B8C91D9FBE39704417A5AE933
-.htaccess                                F2D7013E918AEEE9CBBB3BF2723274AA
-humans.txt                               FD5DD59D0F676F327D654A230052545C
-index.php                                3B027A7C0EF4D93AAE880295E9C8ABA3
-keybit.txt                               6C33486E8694ECB50857E8283BC532D9
-license.txt                              DB85EFB4F2572FD1727A97D806602630
-readme.txt                               045F1153064130BF0F1A93A73414749C
-wp-missed-schedule.php                   E43A789D45CD2C18B735DBAC1C2EED38
+----------------------------------------- Tags Branche 2013 ------------------------------------------
 
-
+index.html                                                            A179F0896DE6744B2F841DBF25177B91
+.htaccess                                                             E78C4AF99F340C052D15A2A1B77C519D
+gpl-2.0.txt                                                           B234EE4D69F5FCE4486A80FDAF4A4263
+humans.txt                                                            842BAA80FDF486FF78E6C772715E2CBC
+index.php                                                             B1DDE13C7371150BB5C1553A7E48E40C
+keybit.txt                                                            473EECF9D3F544F9F05231BD847092F1
+license.txt                                                           B234EE4D69F5FCE4486A80FDAF4A4263
+readme.txt                                                            39842401EC5520F6B47C512A5D439E92
+wp-missed-schedule.php                                                D503EF1B6ED0B4102BEAF258439089CC

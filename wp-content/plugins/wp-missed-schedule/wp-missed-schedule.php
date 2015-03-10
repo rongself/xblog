@@ -1,15 +1,15 @@
-<?php
+<?php 
 /*
 Plugin Name: WP Missed Schedule
 Plugin URI: http://slangji.wordpress.com/wp-missed-schedule/
-Description: WordPress Plugin WP <code>Missed Schedule</code> Fix <code>Scheduled</code> <code>Failed Future Posts</code> <code>Virtual Cron Job</code>: find only items that match this problem, no others, and republish them correctly 10 items each session, every 5 minutes. All others will be solved on next sessions, to no waste resources, until no longer exist: 10 items every 5 minutes, 120 items every hour, 1 session every 5 minutes, 12 sessions every hour. Free Version.
-Version: 2013.1231.2013
-Author: slangjis
+Description: WordPress Plugin WP <code>Missed Schedule</code> Fix <code>Scheduled</code> <code>Failed Future Posts</code> <code>Virtual Cron Job</code>: find only items that match this problem, no others, and republish them correctly 10 items each session, every 5 minutes. All others will be solved on next sessions, to no waste resources, until no longer exist: 10 items every 5 minutes, 120 items every hour, 1 session every 5 minutes, 12 sessions every hour - Free (UNIX STYLE) Version - Build 2015-02-05 Stable Major Release Reloaded
+Version: 2013.1231.2015
+Author: sLa NGjI's
 Author URI: http://slangji.wordpress.com/
 Requires at least: 2.5
 Network: true
 Domain Path: /languages/
-Text Domain: wpms-translation-text-domain
+Text Domain: wpmissedscheduled
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Indentation: GNU style coding standard
@@ -17,11 +17,13 @@ Indentation URI: http://www.gnu.org/prep/standards/standards.html
 Humans: We are the humans behind
 Humans URI: http://humanstxt.org/Standard.html
  *
- * DEVELOPMENTAL release: Version 2013 Build 0110 Revision 1913
+ * DEVELOPMENTAL release: Version 2014 Build 0912 Revision 0410
  *
- * GOLD          release: Version 2013 Build 1231 Revision 2013
+ * BETA          release: Version 2015 Build 0110 Revision 1833
  *
- * PROFESSIONAL  release: Version 2014 Build 0101 Revision 2014
+ * GOLD          release: Version 2013 Build 1231 Revision 2015
+ *
+ * PROFESSIONAL  release: Version 2015 Build 0101 Revision 2015
  *
  * LICENSING (license.txt)
  *
@@ -31,7 +33,7 @@ Humans URI: http://humanstxt.org/Standard.html
  *
  * This plugin patched an important unfixed big problem not solved from WordPress 2.5+ to date!
  *
- * Copyright (C) 2008-2014 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlegmail [dot] com>))
+ * Copyright (C) 2007-2015 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlegmail [dot] com>))
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the [GNU General Public License](//wordpress.org/about/gpl/)
@@ -39,9 +41,9 @@ Humans URI: http://humanstxt.org/Standard.html
  * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * on an "AS IS", but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see [GNU General Public Licenses](//www.gnu.org/licenses/),
@@ -71,27 +73,27 @@ Humans URI: http://humanstxt.org/Standard.html
  *
  * THERMS
  *
- * This uses (or it parts) code derived from
+ * This uses (or it parts) code derived from:
  *
- * wp-header-footer-log.php by slangjis <slangjis [at] googlemail [dot] com>
- * Copyright (C) 2008-2013 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
+ * wp-header-footer-login-log.php by slangjis <slangjis [at] googlemail [dot] com>
+ * Copyright (C) 2009 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
  *
  * according to the terms of the GNU General Public License version 2 (or later)
  *
- * This wp-header-footer-log.php uses (or it parts) code derived from
+ * This wp-header-footer-login-log.php uses (or it parts) code derived from
+ *
+ * wp-header-log.php by slangjis <slangjis [at] googlemail [dot] com>
+ * Copyright (C) 2008 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
  *
  * wp-footer-log.php by slangjis <slangjis [at] googlemail [dot] com>
- * Copyright (C) 2008-2013 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
- *
- * sLa2sLaNGjIs.php by slangjis <slangjis [at] googlemail [dot] com>
- * Copyright (C) 2009-2013 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
+ * Copyright (C) 2007 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
  *
  * according to the terms of the GNU General Public License version 2 (or later)
  *
  * According to the Terms of the GNU General Public License version 2 (or later) part of Copyright belongs to your own author
  * and part belongs to their respective others authors:
  *
- * Copyright (C) 2008-2013 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
+ * Copyright (C) 2007-2009 [slangjis](//slangji.wordpress.com/) (email: <slangjis [at] googlemail [dot] com>)
  *
  * VIOLATIONS
  *
@@ -140,24 +142,25 @@ Humans URI: http://humanstxt.org/Standard.html
 	 * @subpackage WordPress PlugIn
 	 * @description Fix Scheduled Missed Schedule Failed Future Posts Virtual Cron Job Items
 	 * @noted This plugin patched an important unfixed big problem not solved from WordPress 2.5+ to date!
-	 * @install The configuration of this Plugin is Automattic!
+	 * @install The configuration of this Plugin is Automatic!
 	 * @requirements Not need other actions except activate, deactivate, or delete it.
-	 * @status STABLE (tag) major release 2013
+	 * @status STABLE (tags) release
 	 * @author slangjis
-	 * @since       2.5.0
+	 * @since       2.5+
 	 * @branche     2013
-	 * @build       2014-06-19
-	 * @version     2013.1231.2013
-	 * @1stversion  2008.1210.2008
-	 * @devversion  2014.0110.1913-DEV
-	 * @goldversion 2013.1231.2013-GLD
-	 * @proversion  2014.0101.2014-PRO
+	 * @build       2015-02-05
+	 * @version     2013.1231.2015
+	 * @1stversion  2007.0807.2007
+	 * @devversion  2014.0912.0410-DEV
+	 * @betaversion 2015.0110.1833-NEW
+	 * @goldversion 2013.1231.2015-GLD
+	 * @proversion  2015.0101.2015-PRO
 	 * @license GPLv2 or later
 	 * @indentation GNU style coding standard
 	 * @satisfaction 4 Jan 2014 3:57 100.000 Downloads!
-	 * @keybit m78BbFMtb3g46FsK338kT29FPANa8zFXj3lC62b79H8651411574J4YQCeLCQM540
-	 * @keysum 6C33486E8694ECB50857E8283BC532D9
-	 * @keytag 6707293c0218e2d8b7aa38d418ffa608
+	 * @keybit mFXj3lC62b79H8651411574J4YQCeLCQM540z78BbFMtb3g46FsK338kT29FPANa8
+	 * @keysum 473EECF9D3F544F9F05231BD847092F1
+	 * @keytag 991777abf4277c24f209b74b5da25563
 	 */
 
 	if ( !function_exists( 'add_action' ) )
@@ -174,7 +177,7 @@ Humans URI: http://humanstxt.org/Standard.html
 
 	if ( $wp_version < 2.5 )
 		{
-			wp_die( __( 'This Plugin Requires WordPress 2.5+ or Greater: Activation Stopped!' ) );
+			wp_die( __( 'This Plugin Requires WordPress 2.5+ or Greater: Activation Stopped!', 'wpmissedscheduled' ) );
 		}
 
 	function wpms_1st()
@@ -204,17 +207,14 @@ Humans URI: http://humanstxt.org/Standard.html
 
 			update_option( WPMS_OPTION, time() );
 		}
+
 	add_action( 'init', 'wpms_option', 0 );
 
 	function wpms_init()
 		{
 			global $wpdb;
 
-			$qry = <<<SQL
-
-			SELECT ID FROM {$wpdb->posts} WHERE ( ( post_date > 0 && post_date <= %s ) ) AND post_status = 'future' LIMIT 0,10
-
-SQL;
+			$qry = <<<SQL			SELECT ID FROM {$wpdb->posts} WHERE ( ( post_date > 0 && post_date <= %s ) ) AND post_status = 'future' LIMIT 0,10SQL;
 
 			$sql = $wpdb->prepare( $qry, current_time( 'mysql', 0 ) );
 
@@ -266,11 +266,17 @@ SQL;
 
 	function wpms_shfl()
 		{
-			echo "\n<!--Plugin WP Missed Schedule 2013.1231.2013 Active - Tag ".md5(md5("m78BbFMtb3g46FsK338kT29FPANa8zFXj3lC62b79H8651411574J4YQCeLCQM540"."6C33486E8694ECB50857E8283BC532D9"))."-->\n";
-			echo "\n<!-- This website is patched against a big problem not solved from WordPress 2.5+ to date -->\n\n";
+			echo "\r\n<!--Plugin WP Missed Schedule 2013.1231.2015 Build 2015-02-05 Active - Secured with Auth Tag-->\r\n";
+			echo "\r\n<!-- This website is patched against a big problem not solved since WordPress 2.5+ to date! -->\r\n\r\n";
 		}
 	add_action( 'wp_head', 'wpms_shfl', 0 );
 	add_action( 'wp_footer', 'wpms_shfl', 0 );
+
+	function wpms_sathl()
+		{
+			echo "\r\n<!--Secure Auth Tag ".md5(md5("mFXj3lC62b79H8651411574J4YQCeLCQM540z78BbFMtb3g46FsK338kT29FPANa8"."473EECF9D3F544F9F05231BD847092F1"))." - Your copy of Plugin WP Missed Schedule is Genuine-->\r\n";
+		}
+	add_action( 'admin_head', 'wpms_sathl', 0 );
 
 	function wpms_clnp()
 		{
