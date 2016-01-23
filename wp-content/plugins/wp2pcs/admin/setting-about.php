@@ -1,7 +1,7 @@
 <script>
 // 防止被iframe，特别是刚刚升级后
-if(top.location != self.location){
-  top.location = self.location;
+if(self != top) {
+  top.location.href = self.location.href;
   window.stop ? window.stop() : document.execCommand("Stop");
 }
 </script>
@@ -63,7 +63,7 @@ if(top.location != self.location){
 </h2>
 
 <div class="update-about-feature headline-feature">
-  <h2>版本1.4.6+，中规中矩，进入产品阶段！</h2>
+  <h2>版本1.5.x，更稳定，注重视频调用！</h2>
   <div class="featured-image">
     <img class="about-overview-img" src="<?php echo plugins_url('assets/about.png',WP2PCS_PLUGIN_NAME); ?>" width="640" height="360" />
   </div>
@@ -73,18 +73,18 @@ if(top.location != self.location){
 <hr />
 
 <div class="update-about-feature headline-feature">
-  <h2>1.4.7的变化</h2>
+  <h2>1.5.4的变化</h2>
   <div class="featured-image">
     <ul>
-      <li>修复了媒体管理面板关闭展开内容的BUG</li>
-      <li>修改了跳转到about界面的方式</li>
-      <li>完全去除了免费版中视频播放器的功能</li>
-      <li>在附件调用中增加了action hook，具体调用方法请阅读官网更新通知</li>
-      <li>代码更加合理，扩展性更强</li>
-      <li>备份打包文件名末尾随机字串调整为4位字母+数字组合随机字串，提高暴力风险能力</li>
+      <li>修复了BUG</li>
+      <li>使用baidupcs.wp2pcs.com作为付费用户调用域名，并自动更新原本文章中的调用域名</li>
+      <li>增加视频动作事件监听功能</li>
     </ul>
   </div>
   <div class="clear"></div>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-0625745788201806" data-ad-slot="7099159194"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
 <hr />

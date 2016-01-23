@@ -14,7 +14,7 @@ if(isset($_GET['dir']) && !empty($_GET['dir'])){
   $dir_path = $_GET['dir'];
 }
 else{
-  $dir_path = BAIDUPCS_REMOTE_ROOT.'/load';
+  $dir_path = WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load';
 }
 ?>
 <link rel="stylesheet" href="<?php echo plugins_url('/assets/manage-media.css',WP2PCS_PLUGIN_NAME); ?>">
@@ -28,20 +28,20 @@ else{
   </div>
   <div id="wp2pcs-manage-media-page-place">
   当前位置：
-  <a href="<?php echo remove_query_arg(array('dir','paged','refresh')); ?>" <?php if(strpos($dir_path,BAIDUPCS_REMOTE_ROOT.'/load') === false)echo 'style="color:#999;"'; ?>>站点目录</a><?php
+  <a href="<?php echo remove_query_arg(array('dir','paged','refresh')); ?>" <?php if(strpos($dir_path,WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load') === false)echo 'style="color:#999;text-decoration:line-through;"'; ?>>站点目录</a><?php
   if(strpos($dir_path,'/apps/wp2pcs/share') === false) {
-    $current_path = str_replace(BAIDUPCS_REMOTE_ROOT.'/load','',$dir_path);
+    $current_path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load','',$dir_path);
     $current_path = array_filter(explode('/',$current_path));
     $place_path_arr = array();
     if(!empty($current_path)) foreach($current_path as $dir) {
       $place_path_arr[] = $dir;
       $place_path_link = remove_query_arg('refresh');
-      $place_path_link = add_query_arg('dir',BAIDUPCS_REMOTE_ROOT.'/load/'.implode('/',$place_path_arr),$place_path_link);
+      $place_path_link = add_query_arg('dir',WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load/'.implode('/',$place_path_arr),$place_path_link);
       echo ' &rsaquo; <a href="'.$place_path_link.'">'.$dir.'</a>';
     }
   }
   ?>
-  | <a href="<?php echo add_query_arg('dir','/apps/wp2pcs/share'); ?>" <?php if(strpos($dir_path,'/apps/wp2pcs/share') === false)echo 'style="color:#999;"'; ?>>共享目录</a><?php
+  | <a href="<?php echo add_query_arg('dir','/apps/wp2pcs/share'); ?>" <?php if(strpos($dir_path,'/apps/wp2pcs/share') === false)echo 'style="color:#999;text-decoration:line-through;"'; ?>>共享目录</a><?php
   if(strpos($dir_path,'/apps/wp2pcs/share') !== false) {
     $current_path = str_replace('/apps/wp2pcs/share','',$dir_path);
     $current_path = array_filter(explode('/',$current_path));
@@ -92,7 +92,7 @@ else{
     $files_on_pcs = array_slice($files_on_pcs,$begin,$end-$begin);
     $files_total_page = ceil($files_amount/$files_per_page);
     foreach($files_on_pcs as $file) {
-      $file_path = str_replace(BAIDUPCS_REMOTE_ROOT.'/load','',str_replace(' ','%20',$file->path));
+      $file_path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load','',str_replace(' ','%20',$file->path));
       $file_path = str_replace('/apps/wp2pcs/share','',$file_path);
       $file_name = substr($file->path,strrpos($file->path,'/')+1);
       $file_type = $file->isdir === 0 ? strtolower(substr($file_name,strrpos($file_name,'.')+1)) : 'dir';
@@ -113,21 +113,21 @@ else{
       }
       echo '<div class="file-on-pcs file-type-'.$file_type.' file-format-'.$file_format.'" data-file-type="'.$file_type.'" data-file-format="'.$file_format.'" data-file-size="'.$file->size.'" data-file-name="'.$file_name.'" data-file-path="'.$file->path.'">';
       if($file_type == 'dir') {
-        echo '<a href="'.remove_query_arg('refresh',add_query_arg('dir',$file->path)).'" title="目录 '.$file_name.'">'.$file_name.'</a>';
+        echo '<a href="'.remove_query_arg(array('refresh','paged'),add_query_arg('dir',$file->path)).'" title="目录 '.$file_name.'">'.$file_name.'</a>';
       }
       else {
         $load_linktype = get_option('wp2pcs_load_linktype');
         $site_id = get_option('wp2pcs_site_id');
         $file_url = $load_linktype > 0 ? home_url('/wp2pcs'.$file_path) : home_url('?wp2pcs='.$file_path);
-        $file_url = $site_id && $load_linktype > 1 ? 'http://static.wp2pcs.com/'.$site_id.$file_path : $file_url;
+        $file_url = $site_id && $load_linktype > 1 ? WP2PCS_APP_URL.'/'.$site_id.$file_path : $file_url;
         if($file_format == 'image') {
           echo '<img src="'.$file_url.'" title="图片 '.$file_name.'" data-url="'.$file_url.'">';
         }
         elseif($file_format == 'video') {
-          echo '<a title="视频 '.$file_name.'" data-url="'.$file_url.'" data-video-path="'.$file_path.'" data-video-md5="'.$file->md5.'">'.$file_name.'</a>';
+          echo '<a title="视频 '.$file_name.'" data-url="'.$file_url.'" data-video-path="'.$file_path.'" data-video-md5="'.$file->md5.'" data-site-id="'.$site_id.'">'.$file_name.'</a>';
         }
         elseif($file_format == 'music') {
-          echo '<a title="音乐 '.$file_name.'" data-url="'.$file_url.'">'.$file_name.'</a>';
+          echo '<a title="音乐 '.$file_name.'" data-url="'.$file_url.'" data-site-id="'.$site_id.'">'.$file_name.'</a>';
         }
         else {
           echo '<a title="文件 '.$file_name.'" data-url="'.$file_url.'">'.$file_name.'</a>';
@@ -142,7 +142,7 @@ else{
 <div id="wp2pcs-manage-media-page-pagenavi" data-loading="<?php echo plugins_url('assets/loading.gif',WP2PCS_PLUGIN_NAME); ?>">
   <?php
   if($paged > 1){
-    echo '<a href="'.remove_query_arg('paged').'">第一页</a> 
+    echo '<a href="'.remove_query_arg('paged').'">第一页</a>
     <a href="'.add_query_arg('paged',$paged-1).'">上一页</a>';
   }
   if($files_amount >= $files_per_page && ($paged == 1 || $paged < $files_total_page)) {

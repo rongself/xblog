@@ -3,10 +3,10 @@
 Plugin Name: 畅言评论系统
 Plugin URI: http://wordpress.org/plugins/changyan/
 Description: 即装即用，永久免费的社会化评论系统。为各类网站提供新浪微博、QQ、人人、搜狐等账号登录评论功能，同时提供强大的内容管理后台和智能云过滤服务。
-Version:  1.5
+Version:  2.0.2
 Author: 搜狐畅言
 Author URI: http://changyan.sohu.com
-*/
+ */
 ini_set('max_execution_time', '0');
 define('CHANGYAN_PLUGIN_PATH', dirname(__FILE__));
 define('WP_DEBUG', true);
@@ -44,22 +44,13 @@ function changyan_get_transport()
     }
     return false;
 }
-/*
-$transport = changyan_get_transport();
-if ($transport === false) {
-    if (is_admin()) {
-        function changyan_transport_notice()
-        {
-            echo '<div class="updated"><p><strong>CURL未安装</strong>，请联系主机提供商安装或开启CURL</p></div>';
-        }
-        add_action('admin_notices', 'changyan_transport_notice');
-    }
-}*/
 
 /* in case of JSON not found */
 if (false === extension_loaded('json')) {
     include CHANGYAN_PLUGIN_PATH . '/Services_JSON.php';
 }
+require_once CHANGYAN_PLUGIN_PATH . '/Client.php';
+require_once CHANGYAN_PLUGIN_PATH . '/Abstract.php';
 require_once CHANGYAN_PLUGIN_PATH . '/Handler.php';
 
 $changyanPlugin = Changyan_Handler::getInstance();
@@ -94,27 +85,27 @@ function changyan_admin_init()
         /* check wp version when run into the changyan page */
         add_action(get_plugin_page_hook('changyan', 'changyan'), 'changyan_wp_version_warnning');
     }
- 
     add_action('admin_head-edit-comments.php', array($changyanPlugin, 'showCommentsNotice'));
     /* use ajax on wordpress */
     add_action('wp_ajax_changyan_sync2WordPress', array($changyanPlugin, 'sync2Wordpress'));
     add_action('wp_ajax_changyan_sync2Changyan', array($changyanPlugin, 'sync2Changyan'));
-    add_action('wp_ajax_changyan_saveScript', array($changyanPlugin, 'saveScript'));
-    add_action('wp_ajax_changyan_saveAppID', array($changyanPlugin, 'saveAppID'));
-    add_action('wp_ajax_changyan_saveAppKey', array($changyanPlugin, 'saveAppKey'));
-    add_action('wp_ajax_changyan_cron', array($changyanPlugin, 'setCron'));
+    add_action('wp_ajax_changyan_add_isv', array($changyanPlugin, 'addIsv'));
+    add_action('wp_ajax_changyan_register', array($changyanPlugin, 'register'));
+    add_action('wp_ajax_changyan_login', array($changyanPlugin, 'login'));
+    add_action('wp_ajax_changyan_logout', array($changyanPlugin, 'logout'));
+    add_action('wp_ajax_changyan_appinfo', array($changyanPlugin, 'appinfo'));
     add_action('wp_ajax_changyan_seo', array($changyanPlugin, 'setSeo'));
-    add_action('wp_ajax_changyan_quick_load', array($changyanPlugin, 'setQuick'));
-    add_action('wp_ajax_changyan_style', array($changyanPlugin, 'setChangYanStyle'));
+    add_action('wp_ajax_changyan_quick_load', array($changyanPlugin, 'setQuick')); // 开启兼容版本(WAP/PC)
     add_action('wp_ajax_changyan_reping', array($changyanPlugin, 'setChangYanReping')); // 热门评论
     add_action('wp_ajax_changyan_hotnews', array($changyanPlugin, 'setChangYanHotnews')); // 热门新闻
+    add_action('wp_ajax_changyan_debug', array($changyanPlugin, 'setChangYanDebug')); // 开启调试
+    add_action('wp_ajax_changyan_cron', array($changyanPlugin, 'setCron')); // 开启定时同步
     changyan_base_init();
 }
 
 function changyan_init()
 {
     global $changyanPlugin;
-
     changyan_base_init();
 }
 
@@ -122,14 +113,15 @@ function changyan_base_init()
 {
     global $changyanPlugin;
     $script = $changyanPlugin->getOption('changyan_script');
-    
+    $isDebug = $changyanPlugin->getOption('changyan_isDebug');
+    $isScheduled = $changyanPlugin->getOption('changyan_isScheduled');
+
+    @ini_set('display_errors', $isDebug);
     if (!empty($script)) {
         add_filter('comments_template', array($changyanPlugin, 'getCommentsTemplate'));
     }
-    ini_set('display_errors', '1');
-    /* schedule synchronization */
-    $isCron = $changyanPlugin->getOption('changyan_isCron');
-    if ($isCron == true || $isCron == 'true') {
+    // schedule synchronization
+    if ($isScheduled) {
         add_action('changyanCron', array($changyanPlugin, 'cronSync'));
         if (!wp_next_scheduled('changyanCron')) {
             wp_schedule_event(time(), 'hourly', 'changyanCron');
@@ -141,9 +133,11 @@ function changyan_add_menu_items()
 {
     global $changyanPlugin;
 
-    $changyan_appKey = $changyanPlugin->getOption('changyan_appKey');
-    $changyan_script = $changyanPlugin->getOption('changyan_script');
-    if (empty($changyan_appKey) || empty($changyan_script)) {
+    $changyan_username = $changyanPlugin->getOption('changyan_username');
+    $changyan_password = $changyanPlugin->getOption('changyan_password');
+    $changyan_appId = $changyanPlugin->getOption('changyan_appId');
+
+    if (empty($changyan_username) || empty($changyan_password) || empty($changyan_appId)) {
         add_object_page(
             '初始化',
             '畅言评论',
@@ -159,44 +153,16 @@ function changyan_add_menu_items()
                 '畅言评论',
                 'moderate_comments',
                 'changyan',
-                array($changyanPlugin, 'audit'),
+                array($changyanPlugin, 'settings'),
                 $changyanPlugin->PluginURL . 'logo.png'
             );
-
             add_submenu_page(
                 'changyan',
-                '统计分析',
-                '统计分析',
-                'manage_options',
-                'changyan_analysis',
-                array($changyanPlugin, 'analysis')
-            );
-
-            add_submenu_page(
-                'changyan',
-                '畅言设置',
-                '畅言设置',
-                'manage_options',
-                'changyan_config',
-                array($changyanPlugin, 'config')
-           );
-
-            add_submenu_page(
-                'changyan',
-                '高级选项',
-                '高级选项',
-                'manage_options',
-                'changyan_settings',
-                array($changyanPlugin, 'settings')
-            );
-
-            add_submenu_page(
-                'changyan',
-                '智能运营',
-                '智能运营',
-                'manage_options',
-                'changyan_operations',
-                array($changyanPlugin, 'operations')
+                '畅言后台',
+                '畅言后台',
+                'moderate_comments',
+                'changyan_audit',
+                array($changyanPlugin, 'audit')
             );
         }
     }
@@ -204,29 +170,43 @@ function changyan_add_menu_items()
 
 function changyan_deactivate()
 {
-    /*
      global $changyanPlugin;
-    //unset($this->changyan_appID);
-    //*****************Options List*********************
-    //* changyan_script: is a string if the script of changyan is configured.
-    //* changyan_lastSyncTime: is the time of last synchronization (including sync2WP and sync2CY).
-    //* changyan_sync2WP: is the comment_ID in front of the ID synchronized to WordPress.
-    //* changyan_sync2CY: is the comment_ID in front of the ID synchronized to Changyan.
-    //* changyan_appKey: save appKey
-    //**************************************************
-    //Delete all options deserved when deactivited
-    $changyanPlugin->delOption('changyan_script');
+    // Delete all options deserved when deactivited
+    $changyanPlugin->delOption('changyan_lastCmtID2CY');
+    $changyanPlugin->delOption('changyan_lastTimeSync2WP');
+    $changyanPlugin->delOption('changyan_sync_progress');
     $changyanPlugin->delOption('changyan_appId');
-    $changyanPlugin->delOption('changyan_isBinded');
-    $changyanPlugin->delOption('changyan_isSynchronized');
-    */
+    $changyanPlugin->delOption('changyan_appKey');
+    $changyanPlugin->delOption('changyan_username');
+    $changyanPlugin->delOption('changyan_password');
+    $changyanPlugin->delOption('changyan_script');
+    $changyanPlugin->delOption('changyan_reping_script');
+    $changyanPlugin->delOption('changyan_hotnews_script');
+    $changyanPlugin->delOption('changyan_isReping');
+    $changyanPlugin->delOption('changyan_isHotnews');
+    $changyanPlugin->delOption('changyan_isSEO');
+    $changyanPlugin->delOption('changyan_isQuick');
+    $changyanPlugin->delOption('changyan_isDebug');
+    $changyanPlugin->delOption('changyan_isScheduled');
+
+    // also delete options for old version
+    $changyanPlugin->delOption('changyan_div_class');
+    $changyanPlugin->delOption('changyan_div_style');
+    $changyanPlugin->delOption('changyan_isCron');
+    $changyanPlugin->delOption('changyan_sync2CY');
+    $changyanPlugin->delOption('changyan_sync2WP');
+
+    // remove scheduled task
+    if (wp_next_scheduled('changyanCron')) {
+        wp_clear_scheduled_hook('changyanCron');
+    }
 }
 
 /* invoke the functions above */
 if (is_admin()) {
     /* 
        The function register_deactivation_hook (introduced in WordPress 2.0) registers a plugin function to be run when the plugin is deactivated.
-       */
+     */
     register_deactivation_hook(__FILE__, 'changyan_deactivate');
     add_action('admin_menu', 'changyan_add_menu_items',10);
     add_action('admin_init', 'changyan_admin_init');
@@ -242,6 +222,6 @@ function cy_profile_update($user_id, $older_user_data)
     echo 'User ' . $user_id . ',Older data is :<br/>';
     print_r($older_user_data);
 }
-*/
+     */
 
 ?>

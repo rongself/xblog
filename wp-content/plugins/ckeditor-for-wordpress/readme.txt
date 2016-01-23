@@ -1,9 +1,9 @@
 ﻿=== CKEditor for WordPress ===
-Contributors: wiktor, michal_cksource, dczepierga, Dean Lee
+Contributors: wiktor, vokiel, michal_cksource, dczepierga, Dean Lee
 Tags: post, wysiwyg, CKEditor, FCKeditor, editor, rich text, rte, rich text editor
 Requires at least: 3.2
-Tested up to: 4.0
-Stable tag: 4.4.5
+Tested up to: 4.3
+Stable tag: 4.5.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 This plugin replaces the default WordPress editor with <a href="http://ckeditor.com/">CKEditor</a>.
@@ -72,6 +72,25 @@ When upgrading from CKEditor For WordPress 3.6.3 to **CKEditor For WordPress 4.0
 
 == Changelog ==
 
+= V4.5.3.3 - 04.09.2015 =
+
+* Removed the assets folder that is not needed to reduced the size of the package.
+
+= V4.5.3.2 - 04.09.2015 =
+
+* Fixed issue with calling is_plugin_active() outside admin pages that could cause fatal error.
+
+= V4.5.3.1 - 01.09.2015 =
+
+* Security update: fixed reflected XSS caused by improper sanitization in the "built-in (old)" file browser.
+
+= V4.5.3 - 24.08.2015 =
+
+* Fixed compatibility with WordPress 4.3.
+* Fixed skins auto-discovery.
+* Improved positioning of HTML and Visual tabs.
+* Updated CKEditor to 4.5.3.
+
 = V4.4.5 - 30.10.2014 =
 
 * Fixed preview/publish JavaScript errors in WordPress 4.x. Fixed by @vokiel.
@@ -79,7 +98,7 @@ When upgrading from CKEditor For WordPress 3.6.3 to **CKEditor For WordPress 4.0
 
 = V4.4.4 - 18.09.2014 =
 
-* Fixed compatibility with WordPress 4.0. Fixed by @vokiel.
+* Fixed compatibility with WordPress 4.0.
 * Updated CKEditor to 4.4.4.
 * Added Advanced Content Filter setting in Advanced Settings.
 

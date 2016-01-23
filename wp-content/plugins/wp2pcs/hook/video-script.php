@@ -1,73 +1,96 @@
 <?php
 
-// 判断如果加载了WordPress
-if(defined('ABSPATH')) {
+if(!get_option('wp2pcs_site_id') || !get_option('wp2pcs_video_m3u8') || get_option('wp2pcs_site_expire') < date('Y-m-d H:i:s')) return;
 
-// 前台访问打印
-add_action('wp_footer','wp2pcs_video_player_script',0);
+// 在网页头部增加样式
+add_action('wp2pcs_print_video_player_style','wp2pcs_video_player_style');
+add_action('wp_head','wp2pcs_video_player_style');
+function wp2pcs_video_player_style() {
+  if(did_action('wp2pcs_print_video_player_style')) return;
+  //if(!get_option('wp2pcs_site_id') || !get_option('wp2pcs_video_m3u8')) return;
+  echo '<style>';
+  echo 'iframe.wp2pcs-video-player{display:block;margin:1em auto;background:url('.plugins_url('assets/video-play.png',WP2PCS_PLUGIN_NAME).') no-repeat center #f5f5f5;border:0;}';
+  echo 'iframe.wp2pcs-video-playing{display:block;margin:1em auto;background:url('.plugins_url('assets/loading.gif',WP2PCS_PLUGIN_NAME).') no-repeat center #f5f5f5;border:0;}';
+  //echo '@media screen and (max-width: 480px){iframe.wp2pcs-video-playing{background-size:63px 65px;}}';
+  echo '</style>';
+  echo '<link rel="dns-prefetch" href="'.parse_url(WP2PCS_APP_URL,PHP_URL_HOST).'">'; // 与解析域名，在加载视频的时候就不用再解析域名，而是直接从远端读取网页
+}
+
+// 在网页底部增加脚本
+add_action('wp2pcs_print_video_player_script','wp2pcs_video_player_script');
+add_action('wp_footer','wp2pcs_video_player_script');
 function wp2pcs_video_player_script() {
-$site_id = get_option('wp2pcs_site_id');
-if($site_id && get_option('wp2pcs_video_m3u8')) :
-?>
-<style>
-<?php
-echo '.wp2pcs-video-player{display:block;margin:1em auto;cursor:pointer;background:url('.plugins_url('assets/video-play.png',WP2PCS_PLUGIN_NAME).') no-repeat center #f5f5f5;-moz-opacity:0.6;opacity:0.6;overflow:hidden;border:0;}';
-echo '.wp2pcs-video-player a{display:block;min-width:480px;min-height:360px;margin: auto;}';
-echo '.wp2pcs-video-player:hover{-moz-opacity:1;opacity:1;}';
-echo '.wp2pcs-video-player img{-moz-opacity:0.6;opacity:0.6;width:100%;height:100%;}';
-echo '.wp2pcs-video-playing{display:block;border:0;margin:auto;background:url('.plugins_url('assets/loading.gif',WP2PCS_PLUGIN_NAME).') no-repeat center;}';
-?>
-</style>
-<script>window.jQuery || document.write('<script type="text/javascript" src="<?php echo plugins_url("assets/jquery-1.11.2.min.js",WP2PCS_PLUGIN_NAME); ?>">\x3C/script>');</script>
-<script type="text/javascript">
-<?php
-echo 'function wp2pcs_setup_videos() {';
-echo 'jQuery("iframe.wp2pcs-video-player").each(function(){';
-echo 'var $this = jQuery(this),';
-echo 'path = $this.attr("data-path"),';
-echo 'width = $this.attr("width"),';
-echo 'height = $this.attr("height"),';
-echo 'stretch = $this.attr("data-stretch"),';
-echo 'md5 = $this.attr("data-md5"),';
-echo 'root_dir = $this.attr("data-root-dir"),';
-echo 'image = $this.attr("data-image");';
-echo 'if(root_dir != undefined) {';
-echo 'if(root_dir == "share") root_dir = "/apps/wp2pcs/share";';
-echo '}';
-echo 'else {';
-echo 'root_dir = "'.BAIDUPCS_REMOTE_ROOT.'/load";';
-echo '}';
-echo 'if(path.indexOf(root_dir) != 0) path = root_dir + path;';
-echo '$this.attr("src","http://static.wp2pcs.com/player?site_id='.$site_id.'&size=" + width + "_" + height + "&stretch=" + stretch + "&image=" + image + "&md5=" + md5 + "&path=" + path);';
-echo '$this.removeClass("wp2pcs-video-player").addClass("wp2pcs-video-playing");';
-echo '$this.attr("frameborder","0");';
-echo '$this.attr("scrolling","no");';
-echo '});';
-echo '}';
-echo 'wp2pcs_setup_videos();';
-?>
-</script>
-<?php
-endif;
+  if(did_action('wp2pcs_print_video_player_script')) return;
+  $site_id = get_option('wp2pcs_site_id');
+  echo '<script>window.jQuery || document.write(\'<script type="text/javascript" src="'.plugins_url("assets/jquery-1.11.2.min.js",WP2PCS_PLUGIN_NAME).'">\x3C/script>\');</script>';
+  echo '<script type="text/javascript">';
+  echo 'function wp2pcs_setup_videos() {';
+    echo 'jQuery("iframe.wp2pcs-video-player").each(function(){';
+    echo 'var $this = jQuery(this),';
+      echo 'path = $this.attr("data-path"),';
+      echo 'stretch = $this.attr("data-stretch"),';
+      echo 'autostart = $this.attr("data-autostart"),';
+      echo 'site_id = $this.attr("data-site-id"),';
+      echo 'root_dir = $this.attr("data-root-dir"),';
+      echo 'image = $this.attr("data-image");';
+    echo 'if(site_id == undefined || isNaN(site_id)) site_id="'.$site_id.'";';
+    echo 'if(root_dir != undefined) {';
+      echo 'if(root_dir == "share") root_dir = "/apps/wp2pcs/share";';
+    echo '}';
+    echo 'else {';
+      echo 'root_dir = "'.WP2PCS_BAIDUPCS_REMOTE_ROOT.'/load";';
+    echo '}';
+    echo 'if(path.indexOf(root_dir) != 0) path = root_dir + path;';
+    echo 'path = path.replace("&","%26");';
+    echo 'path = path.replace("\'","%27");';
+    echo 'path = path.replace("\"","%22");';
+    echo '$this.attr("src","'.WP2PCS_APP_URL.'/video?v1=pan.baidu.com&v2=video.cdn.baidupcs.com&v3=pcs.baidu.com&v4=cybertran.baidu.com&callback_url='.rawurlencode(home_url()).'&site_id=" + site_id + "&stretch=" + stretch + "&autostart=" + autostart + "&image=" + image + "&path=" + encodeURIComponent(path));';
+    echo '$this.removeClass("wp2pcs-video-player").addClass("wp2pcs-video-playing");';
+    echo '$this.attr("frameborder","0");';
+    echo '$this.attr("scrolling","no");';
+    echo '});';
+  echo '}';
+  echo 'wp2pcs_setup_videos();';// 如果某些网站采用了ajax加载页面，可以在ajax加载完之后执行一次wp2pcs_setup_videos();，从而可以让视频加载。
+  echo '</script>';
 }
 
-// 加入到后台编辑器中css
-add_action('init','wp2pcs_admin_editor_video_player_style');
-function wp2pcs_admin_editor_video_player_style() {
-  add_editor_style(plugins_url('hook/video-script.php?script=style.css',WP2PCS_PLUGIN_NAME));
+// 跨域实现视频的播放与暂停事件
+add_action('init','wp2pcs_video_player_callback');
+function wp2pcs_video_player_callback() {
+  if(!isset($_GET['action']) || $_GET['action'] != 'wp2pcs_video_player_callback') {
+    return;
+  }
+  if(!isset($_GET['method']) || empty($_GET['method'])) {
+    return;
+  }
+  header("Cache-Control: public");
+  header("Pragma: cache");
+  header("Expires: ".gmdate("D, d M Y H:i:s",strtotime('+2 days'))." GMT");
+  if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+    header("Last-Modified: {$_SERVER['HTTP_IF_MODIFIED_SINCE']}",true,304);
+    exit;
+  }
+  else {
+    header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+  }
+  $method = $_GET['method'];
+  $html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>WP2PCS VIDEO PLAYER CALLBACK</title><script>';
+  $html .= 'var str = location.hash;';
+  $html .= 'if(str.length > 1){str= str.substring(1);}';
+  if($method == 'onload') {
+    $html .= 'window.parent.parent.wp2pcs_video_onLoad(str);';
+  }
+  elseif($method == 'onplay') {
+    $html .= 'window.parent.parent.wp2pcs_video_onPlayer(str);';
+  }
+  elseif($method == 'onpause') {
+    $html .= 'window.parent.parent.wp2pcs_video_onPause(str);';
+  }
+  elseif($method == 'onbuffer') {
+    $html .= 'window.parent.parent.wp2pcs_video_onBuffer(str);';
+  }
+  $html .= 'window.location.href = "about:blank";';
+  $html .= '</script></head><body></body></html>';
+  echo $html;
+  exit();
 }
-
-
-}
-// 如果没有加载WordPress的话
-else {
-
-// 直接访问文件的时候打印CSS
-if(isset($_GET['script']) && $_GET['script'] == 'style.css') {
-  header('Content-Type: text/css; charset=utf-8');
-  echo '.wp2pcs-video-player{display:block;margin:auto !important;}';
-  echo '.wp2pcs-video-player:hover{}';
-  exit;
-}
-
-} // 没有加载Wordpress结束

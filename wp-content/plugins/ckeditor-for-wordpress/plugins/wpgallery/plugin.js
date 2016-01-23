@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
@@ -246,14 +246,14 @@ var image_attributes = {};
 			{
 				return function( data )
 				{
-					data = data.replace( /\[caption(.*?)\]([^>]+?>)(.*?)\[\/caption\]/mig, function(match, captionAttr, imgTag, captionText)
+					data = data.replace( /\[caption(.*?)\].*?(<img.*?\/?>).*?[^>]+?>(.*?)\[\/caption\]/mig, function(match, captionAttr, imgTag, captionText)
 					{
 						var pattern = /wp-image-([0-9]+)/i;
 						var match = pattern.exec(imgTag);
-						if (match[1]) {
+						if (match && match[1]) {
 							image_attributes['wp-image-' + match[1]] = {
 								'data-cke-caption' : captionAttr.replace(/^ /, ''),
-								'data-cke-caption-text' : captionText
+								'data-cke-caption-text' : captionText.replace(/^ /, '')
 							};
 							return imgTag;
 						}

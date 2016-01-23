@@ -1,10 +1,10 @@
-<?php
+<?php if ( !defined('ABSPATH')){ exit; } // Exit if accessed directly
 
 /*
 Plugin Name: CKEditor for WordPress
 Plugin URI: http://wordpress.ckeditor.com/
 Description: Replaces the default WordPress editor with <a href="http://ckeditor.com/"> CKEditor</a>
-Version: 4.4.5
+Version: 4.5.3.3
 Author: CKSource
 Author URI: http://cksource.com/
 */
@@ -13,8 +13,7 @@ add_action('init', 'ckeditor_init');
 
 function ckeditor_init(){
 	global $ckeditor_wordpress;
-	require_once 'ckeditor_class.php';
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	require_once dirname(__FILE__) . '/ckeditor_class.php';
 
 	if (is_admin()){
 		add_action('admin_menu', array(&$ckeditor_wordpress, 'add_option_page'));
@@ -46,10 +45,9 @@ function ckeditor_init(){
 	add_filter( 'ckeditor_buttons', array(&$ckeditor_wordpress, 'wppoll_buttons') );
 
 	/** temporary for ngggallery **/
-	include_once(dirname(__FILE__) . '/plugins/nggallery/ckeditor.php');
+	include_once dirname(__FILE__) . '/plugins/nggallery/ckeditor.php';
 
 	/** temporary for gd-star-rating **/
 	add_filter( 'ckeditor_external_plugins', array(&$ckeditor_wordpress, 'starrating_external_plugin') );
 	add_filter( 'ckeditor_buttons', array(&$ckeditor_wordpress, 'starrating_buttons') );
 }
-?>

@@ -13,22 +13,33 @@
   <h3 class="hndle">授权信息</h3>
   <div class="inside">
     <?php
-      if(!BAIDUPCS_ACCESS_TOKEN) {
+      if(!function_exists('curl_init') || !function_exists('curl_exec')) {
+        echo '<p style="color:red">主机对cURL模块支持不完整，请联系主机商咨询。</p>';
+      }
+      elseif(!WP2PCS_BAIDU_ACCESS_TOKEN) {
         $baidupcs_btn_class = 'button-primary';
       }
       else {
         $baidupcs_btn_class = 'button';
         global $BaiduPCS;
         $quota = json_decode($BaiduPCS->getQuota());
-        if(isset($quota->error_code) || $quota->error_code || (int)$quota->quota == 0){
-          echo '<p>获取百度网盘容量错误，重新授权试试吧。</p>';
+        if(isset($quota->error_code) && in_array($quota->error_code,array(100,110,111,31023))) {
+          echo '<p>百度账号授权信息可能已经过期，点击下方按钮更新授权试试。</p>';
+          $baidupcs_btn_class = 'button-primary';
+        }
+        elseif(isset($quota->error_code)){
+          echo '<p>获取百度网盘信息错误，'.$quota->error_code.'：'.$quota->error_msg.'。</p>';
+          $baidupcs_btn_class = 'button-primary';
+        }
+        elseif((int)$quota->quota == 0) {
+          echo '<p>获取百度网盘信息错误。可能是因为你的主机不支持curl，不建议使用。</p>';
           $baidupcs_btn_class = 'button-primary';
         }
         else{
           echo '<p>当前百度网盘总'.number_format(($quota->quota/(1024*1024)),2).'MB，剩余'.number_format((($quota->quota - $quota->used)/(1024*1024)),2).'MB。</p>';
         }
       }
-      if(!TENCENT_OPEN_ID || !TENCENT_ACCESS_TOKEN) {
+      if(!WP2PCS_TENCENT_OPEN_ID || !WP2PCS_TENCENT_ACCESS_TOKEN) {
         $weiyun_btn_class = 'button-primary';
       }
       else {
@@ -36,8 +47,9 @@
       }
     ?>
     <p>
-      <a class="<?php echo $baidupcs_btn_class; ?>" onclick="window.location.href = 'https://api.wp2pcs.com/oauth_baidupcs.php?url=' + encodeURIComponent(window.location.href);">百度授权</a>
-      <a class="<?php echo $weiyun_btn_class; ?>" onclick="window.location.href = 'https://api.wp2pcs.com/oauth_weiyun.php?url=' + encodeURIComponent(window.location.href);">微云授权</a> <small>微云授权暂时没用</small>
+      <a class="<?php echo $baidupcs_btn_class; ?>" onclick="window.location.href = '<?php echo WP2PCS_API_URL; ?>/client-baidu-oauth.php?url=' + encodeURI(window.location.href);">百度授权</a>
+      <!-- class="<?php echo $weiyun_btn_class; ?>" onclick="window.location.href = WP2PCS_API_URL.'/oauth_weiyun.php?url=' + encodeURIComponent(window.location.href);">微云授权</a-->
+      <small>请尽量不要切换账号授权</small>
     </p>
   </div>
 </div>

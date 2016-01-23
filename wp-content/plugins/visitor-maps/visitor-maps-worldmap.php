@@ -300,7 +300,7 @@ $string .= "\n".'<!--[if lte IE 8 ]>
        $rows_arr = $wpdb->get_results("
                  SELECT SQL_CALC_FOUND_ROWS user_id, name, nickname, country_name, country_code, city_name, state_name, state_code, latitude, longitude
                  FROM ".$wo_table_wo."
-                 WHERE time_last_click > '" . absint($xx_secs_ago) . "' LIMIT ".$visitor_maps_opt['pins_limit'] ."",ARRAY_A );
+                 WHERE time_last_click > '" . absint($xx_secs_ago) . "' LIMIT ".absint($visitor_maps_opt['pins_limit']) ."",ARRAY_A );
 
        $rows_count = $wpdb->get_var("SELECT FOUND_ROWS()");
 
@@ -310,7 +310,7 @@ $string .= "\n".'<!--[if lte IE 8 ]>
                  SELECT SQL_CALC_FOUND_ROWS user_id, name, nickname, country_name, country_code, city_name, state_name, state_code, latitude, longitude
                  FROM ".$wo_table_wo."
                  WHERE (name = 'Guest' AND time_last_click > '" . absint($xx_secs_ago) . "')
-                 OR (name != 'Guest' AND user_id > 0 AND time_last_click > '" . absint($xx_secs_ago) . "') LIMIT ".$visitor_maps_opt['pins_limit'] ."",ARRAY_A );
+                 OR (name != 'Guest' AND user_id > 0 AND time_last_click > '" . absint($xx_secs_ago) . "') LIMIT ".absint($visitor_maps_opt['pins_limit']) ."",ARRAY_A );
 
        $rows_count = $wpdb->get_var("SELECT FOUND_ROWS()");
   }
@@ -352,7 +352,7 @@ if ($rows_arr) { // check of there are any visitors
       if ($visitor_maps_opt['enable_users_map_hover'] && $row['user_id'] > 0 && $row['name'] != '') {
          // find name for logged in user
          // different pin color for logged in user
-         $title_pre = $this->wo_sanitize_output($row['name']).' '.__('from', 'visitor-maps').' ';
+         $title_pre = $row['name'].' '.__('from', 'visitor-maps').' ';
          if($G['pin'] == 1){
            $this_image_pin = str_replace('.jpg','-user.jpg',$image_pin);
          }
@@ -360,9 +360,9 @@ if ($rows_arr) { // check of there are any visitors
       if ( !$visitor_maps_opt['hide_bots'] && $row['user_id'] == 0 && $row['name'] != 'Guest') {
          //  find name for bot
          // different pin color for bot
-         if ( $this->wo_not_null($row['name'])  ) {
+         if ( !empty($row['name'])  ) {
            for ($i=0, $n=sizeof($spiders); $i<$n; $i++) {
-               if ($this->wo_not_null($spiders[$i]) && is_integer(strpos($row['name'], trim($spiders[$i]))) ) {
+               if (!empty($spiders[$i]) && is_integer(strpos($row['name'], trim($spiders[$i]))) ) {
                    // Tokenize UserAgent and try to find Bots name
                    $tok = strtok($row['name']," ();/");
                    while ($tok !== false) {
@@ -372,7 +372,7 @@ if ($rows_arr) { // check of there are any visitors
                            !strstr(strtolower($tok), "msie") &&
                            !strstr(strtolower($tok), "windows")
                            ) {
-                           $title_pre = $this->wo_sanitize_output($tok).' '.__('from', 'visitor-maps').' ';
+                           $title_pre = $tok.' '.__('from', 'visitor-maps').' ';
                            if($G['pin'] == 1){
                                $this_image_pin = str_replace('.jpg','-bot.jpg',$image_pin);
                            }
@@ -389,12 +389,12 @@ if ($rows_arr) { // check of there are any visitors
       if ( $visitor_maps_opt['enable_state_display'] ) {
               if ($row['city_name'] != '') {
                 if ($row['country_code'] == 'US') {
-                     $title = $this->wo_sanitize_output($row['city_name']);
+                     $title = $row['city_name'];
                      if ($row['state_code'] != '')
-                             $title = $this->wo_sanitize_output($row['city_name']) . ', ' . $this->wo_sanitize_output(strtoupper($row['state_code']));
+                             $title = $row['city_name'] . ', ' . strtoupper($row['state_code']);
                 }
                 else {      // all non us countries
-                     $title = $this->wo_sanitize_output($row['city_name']) . ', ' . $this->wo_sanitize_output(strtoupper($row['country_code']));
+                     $title = $row['city_name'] . ', ' . strtoupper($row['country_code']);
                 }
              }
              else {
@@ -405,7 +405,7 @@ if ($rows_arr) { // check of there are any visitors
       }
       $title = $title_pre . $title;
       $string .= '<div style="cursor:pointer;position:absolute; top:'.$y.'px; left:'.$x.'px;">
-      <img src="'.$this_image_pin.'" style="border:0; margin:0; padding:0;" width="'.$image_pin_width.'" height="'.$image_pin_height.'" alt="" title="'.$this->wo_sanitize_output($title).'" />
+      <img src="'.$this_image_pin.'" style="border:0; margin:0; padding:0;" width="'.$image_pin_width.'" height="'.$image_pin_height.'" alt="" title="'.esc_attr($title).'" />
       </div>';
       $string .= "\n";
     }

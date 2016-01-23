@@ -1,6 +1,6 @@
-<?php
+<?php if ( !defined('ABSPATH')){ exit; } // Exit if accessed directly
 /*
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 
@@ -204,6 +204,7 @@ function ckeditor_overview_configuration() {
 	</div>
 <?php
 }
+
 function ckeditor_reset_settings() {
 	?>
 	<div>
@@ -231,14 +232,12 @@ function ckeditor_overview_help() {
 	<div>
 	<table class="form-table ckeditor_links">
 		<tr valign="top">
-			<td class="cke"><a href="http://ckeditor.com"><?php _e('CKEditor Site', 'ckeditor_wordpress');?></a></td>
 			<td class="help"><a href="http://docs.cksource.com/CKEditor_3.x/Users_Guide"><?php _e('User Guide', 'ckeditor_wordpress');?></a></td>
 			<td class="plug"><a href="http://wordpress.org/extend/plugins/ckeditor-for-wordpress/"><?php _e('Plugin Site', 'ckeditor_wordpress');?></a></td>
 		</tr>
 		<tr valign="top">
-			<td class="excl"><a href="http://wordpress.ckeditor.com/troubleshooting"><?php _e('Troubleshooting', 'ckeditor_wordpress');?></a></td>
-			<td class="docs"><a href="http://docs.cksource.com/CKEditor_3.x/Developers_Guide"><?php _e('CKEditor Documentation', 'ckeditor_wordpress');?></a></td>
-			<td class="conf"><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html"><?php _e('Configuration Options', 'ckeditor_wordpress');?></a></td>
+			<td class="docs"><a href="http://docs.ckeditor.com/"><?php _e('CKEditor Documentation', 'ckeditor_wordpress');?></a></td>
+			<td class="conf"><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config"><?php _e('Configuration Options', 'ckeditor_wordpress');?></a></td>
 		</tr>
 	</table>
 	</div>
@@ -252,4 +251,3 @@ add_meta_box('dashboard_overview_server', __('Server Information', 'ckeditor_wor
 add_meta_box('dashboard_reset_settings', __('Reset Plugin Settings', 'ckeditor_wordpress'), 'ckeditor_reset_settings', 'ckeditor_overview', 'left', 'core');
 
 ckeditor_admin_overview();
-?>

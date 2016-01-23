@@ -74,9 +74,12 @@ jQuery(function($){
     $this.toggleClass('selected');
     if($this.hasClass('selected')) {
       $input.prop('checked',true);
+      $('#wp2pcs-insert-media-btn-help').next('span.wp2pcs-insert-media-show-url').remove();
+      $('#wp2pcs-insert-media-btn-help').after('<span class="wp2pcs-insert-media-show-url" style="float:left;margin-left:10px;"><input type="url" class="regular-text" value="' + $input.val() + '"></span>');
     }
     else {
       $input.prop('checked',false);
+      $('#wp2pcs-insert-media-btn-help').next('span.wp2pcs-insert-media-show-url').remove();
     }
   });
   // 变化勾选状况
@@ -121,13 +124,15 @@ jQuery(function($){
       var html = '';
       $('.file-on-pcs.selected').each(function(){
         var $this = $(this),
+            file_type = $this.attr('date-file-type'),
             $input = $this.children('input'),
             is_imglink = $('#wp2pcs-insert-media-iframe-check-imglink').prop('checked'),
             is_videoplay = $('#wp2pcs-insert-media-iframe-check-videoplay').prop('checked'),
             root_dir = $('#wp2pcs-insert-media-iframe-check-root-dir').val(),
             video_path = $input.attr('data-video-path'),
-            video_md5 = $input.attr('data-video-md5'),
+            site_id = $input.attr('data-site-id'),
             url = $input.val();
+        if(site_id == undefined) site_id = '';
         // 如果被选择的是图片
         if($this.hasClass('file-format-image')){
           if(is_imglink) html += '<a href="' + url + '">';
@@ -137,20 +142,24 @@ jQuery(function($){
         // 如果是视频
         else if($this.hasClass('file-format-video')) {
           if(is_videoplay) {
-            html += '<p><iframe class="wp2pcs-video-player" width="480" height="360" data-stretch="" data-image="" data-path="' + video_path + '" data-md5="' + video_md5 + '"';
+            html += '<iframe class="wp2pcs-video-player" width="480" height="360" data-stretch="uniform" data-autostart="false" data-image="" data-path="' + video_path + '" data-site-id="' + site_id + '"';
             if(root_dir) html += ' data-root-dir="' + root_dir + '"';
-            html += '></iframe></p>';
+            html += ' scrolling="no" frameborder="0"></iframe>';
           }
           else {
-            html += '<p>' + url + '</p>';
+            html += '[video width="" height="" src="' + url + '" poster="none" preload="none" loop="off" autoplay="off" data-site-id="' + site_id + '"]';
           }
         }
         else if($this.hasClass('file-format-music')) {
-          html += '<p>' + url + '</p>';
+          html += '[audio src="' + url + '" poster="none" preload="none" loop="off" autoplay="off" data-site-id="' + site_id + '"]';
         }
         // 如果是其他文件，就直接给媒体链接
         else{
-          html += '&nbsp;' + url + '&nbsp;';
+          html += '<span class="wp2pcs-file">';
+          if(is_imglink) html += '<a href="' + url + '" class="wp2pcs-file">';
+          html += url;
+          if(is_imglink) html += '</a>';
+          html += '</span>';
         }
       });
       $('#wp2pcs-insert-media-btn-clear').click();

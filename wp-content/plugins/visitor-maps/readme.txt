@@ -4,7 +4,7 @@ Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3BPEZ9WGYEYG
 Tags: plugin, plugins, users, visitors, visitor, whos online, map, maps, geolocation, location, country, statistics, stats, widget, sidebar, admin, dashboard, multilingual, wpmu, buddypress
 Requires at least: 2.8
-Tested up to: 4.1
+Tested up to: 4.3
 Stable tag: trunk
 
 Displays Visitor Maps with location pins, city, and country. Includes a Who's Online Sidebar. Has an admin dashboard to view visitor details.
@@ -33,7 +33,7 @@ Features:
 
 Requirements/Restrictions:
 -------------------------
- * Works with Wordpress 2.8+, WPMU, and BuddyPress. (Wordpress 4.1+ is highly recommended)
+ * Works with Wordpress 2.8+, WPMU, and BuddyPress. (Wordpress 4.3+ is highly recommended)
  * PHP5
  * 30 megs of server space(with geolocation enabled)
  * PHP register_globals and safe_mode should be set to "Off"
@@ -44,8 +44,8 @@ Credits:
 * Ported to Wordpress from the [Free Who's Online PHP Script by Mike Challis](http://www.642weather.com/weather/scripts-whos-online.php)
 * Inspired by the osCommerce contribution [Who's Online Enhancement](http://addons.oscommerce.com/info/824)
 * Geolocation map images contributed by [Jim McMurry](http://jcweather.us)
-* Code sample for the map location pins contributed by [pinto](http://www.joske-online.be)
-* Uses GeoLiteCity data created by MaxMind, available from www.maxmind.com
+* Code sample for the map location pins contributed by pinto.
+* Geolocation features available with [Visitor Maps Geolocation Addon](http://www.642weather.com/weather/scripts-wordpress-visitor-maps-geoip.php)
 * Thanks to all the users who contributed ideas or enhancements.
 
 == Installation ==
@@ -60,6 +60,8 @@ Credits:
 (If you do not use widgets and want to add this manually, see FAQ)
 
 5. Updates are automatic. Click on "Upgrade Automatically" if prompted from the admin menu.
+
+6. Install [Visitor Maps Geolocation Addon](http://www.642weather.com/weather/scripts-wordpress-visitor-maps-geoip.php) to enable geolocation. After installation be sure to activate the plugin. Next, go to the Visitor Maps Options menu to click to "Install" the Maxmind GeoLite City Database, then click "Enable Geolocation" and click Update Options. 
 
 
 == Screenshots ==
@@ -132,9 +134,9 @@ If you can, edit your PHP.ini file (usually located in /etc/php.ini or the root 
 
 The geolite database is really just a 30 meg file. As a workaround, you can manually download the 
 [GeoLiteCity.dat.gz file from this URL](http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz), 
-unzip it and upload GeoLiteCity.dat to the `/plugins/visitor-maps/` folder. 
+unzip it and upload GeoLiteCity.dat to the `/wp-content/visitor-maps-geoip/` folder. 
 The GeoLiteCity.dat file is the database for the location from IP feature. 
-If the file is missing, the blog should function fine. When the file is not installed, the location information for a user is skipped.
+If the file is missing, the blog should still function. When the file is not installed, the location information for a user is skipped.
 
 
 = Why are all the location pins about 10 pixels too low on the visitor map? =
@@ -193,6 +195,19 @@ Yes, please read [How to update a translation of Visitor Maps for WordPress](htt
 
 
 == Changelog ==
+
+= 1.5.8.10 =
+- (01 Sep 2015) - added the ability to dismiss the admin message about downloading the Visitor Maps Geolocation Addon plugin.
+
+= 1.5.8.9 =
+- (31 Aug 2015) - Fixed error undefined function.
+
+= 1.5.8.8 =
+- (29 Aug 2015) - Moved the Geolocation features to the new [Visitor Maps Geolocation Addon](http://www.642weather.com/weather/scripts-wordpress-visitor-maps-geoip.php). It was a required change because the Creative Commons License for the Maxmind GeoLite City Database is not compatible with the WordPress GPL License. When the "Visitor Maps Geolocation Addon" plugin is installed with version 1.5.8.8 or higher of Visitor Maps, Visitor Maps functions exactly the same way it did before.
+- cleaned up some code. 
+
+= 1.5.8.7 =
+- (21 Aug 2015) - Fixed Possible XSS Security Exploit in Visitor Maps - Who's Been Online view
 
 = 1.5.8.6 =
 - (28 Dec 2014) - Improved timezone compliance with WP.

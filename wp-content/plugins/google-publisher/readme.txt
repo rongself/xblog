@@ -2,29 +2,29 @@
 Contributors: google
 Tags: adsense, google adsense, adsense plugin, ads, advertising, google ads,  advertisement, advertising, google
 Requires at least: 3.5
-Tested up to: 4.1
+Tested up to: 4.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The official AdSense Plugin, written by Google. Supported products include AdSense and Webmaster Tools. Previously Google Publisher Plugin.
+The official AdSense Plugin, written by Google. Provides support for AdSense as well as Webmaster Tools.
 
 == Description ==
 
 The AdSense Plugin enables you to easily use Google's products - including Webmaster Tools - with your WordPress site.
 
-** Now with Automated Mobile Ads! **
-
-To insert AdSense ads without the plugin would first involve generating the AdSense snippet and then pasting the Adsense snippet into either the text of the site or directly into the PHP. This plugin lets you place AdSense ads using a simple point-and-click UI rather than manually inserting snippets yourself. Google automatically determines potential placements for AdSense ads, suggests an initial ad layout, and allows you to lay out ads on your site.
+This plugin lets you place AdSense ads using a simple point-and-click UI rather than manually inserting snippets yourself. To insert AdSense ads without the plugin would first involve generating the AdSense snippet and then pasting the Adsense snippet into either the text of the site or directly into the PHP. Google automatically determines potential placements for AdSense ads, suggests an initial ad layout, and allows you to lay out ads on your site.
 
 This version of the AdSense Plugin allows you to:
 
 * Easily add AdSense ads to your site to make money from advertising.
-* With one click, enable mobile-specific ad layouts with the new Automated Mobile Ads. [Learn more](https://support.google.com/adsense/answer/3380277)
+* With one click, enable mobile-specific ad layouts with Automated Mobile Ads. [Learn more](https://support.google.com/adsense/answer/3380277)
 * Manage your ads quickly and easily through a point-and-click interface.
-* [Manually insert ads](https://support.google.com/adsense/answer/6051417) in locations that you determine yourself. This gives you the power of manual insertion of snippets while also being able to use the plugin’s great UI. You can specify precise layout locations in HTML as well as interact with them through a point-and-click interface.
+* [Manually insert ads](https://support.google.com/adsense/answer/6051417) in locations that you determine yourself.
 * [Exclude pages](https://support.google.com/adsense/answer/6023216#disable) from having ads on them.
 * Verify your site with Webmaster Tools with just one click.
+
+This plugin was previously known as the Google Publisher Plugin.
 
 [Visit Google Help Center](https://support.google.com/adsense/answer/3380626) for more information.
 
@@ -59,6 +59,14 @@ If you have any trouble with automatic installation, you can try it manually. To
 
 Move on to [plugin setup](https://support.google.com/adsense/answer/answer.py?answer=3380277).
 
+= Terms of service =
+
+The plugin source code is GPL, however use of Google Services through the plugin is governed by [Google's Terms of Service](http://www.google.com/policies/terms/) and [Privacy Policy](http://www.google.com/policies/privacy/). For products and services that can be used with the AdSense Plugin, such as AdSense, additional Terms of Service may also apply.
+
+= HTML5 Local Storage =
+
+Google uses HTML5 Local Storage in the end-user's browser to record which kind of ad layout it serves to each browser; this includes the number of ads served and their position on the site. This helps Google compare ad performance across different ad layouts. The information is anonymous and is not personally identifiable. Do not use this Google-managed value for your own tracking; it may prevent the plugin from gathering reliable data about ad layouts. Your site should already include the appropriate disclosures about cookie usage, but please ensure that you [make the disclosures required by AdSense terms and conditions](https://support.google.com/adsense/answer/1348695).
+
 == Frequently Asked Questions ==
 
 = Is this an official Google plugin? =
@@ -91,6 +99,18 @@ All plugins and placements must still adhere to the [AdSense Terms and Condition
 4. Preview example advertisements alongside your content.
 
 == Changelog ==
+
+= 17 August 2015, Plugin version 1.2.0 =
+* Improved interaction with caching plugins.
+* Added new activation success notification.
+
+= 18 June 2015, Plugin version 1.1.1 =
+* You can now use Automated Mobile Ads without having to remove existing ads from your site.
+* Fixed a bug that showed an incorrect error when an unauthorized call to an admin-only action is made.
+* New AdSense logo.
+
+= 20 Feb 2015, Plugin version 1.1.0 =
+* Ads can now be placed on custom page templates.
 
 = 13 Jan 2015, Plugin version 1.0.2 =
 * Fixed a bug that caused newly created pages on some themes to be incorrectly recognized as using custom page templates.
@@ -157,11 +177,3 @@ The following changes do not require a plugin update, and were fixed server-side
 
 = 15 Jan 2014, Plugin version 0.1.0 =
 * Initial release.
-
-== Terms of service ==
-
-The plugin source code is GPL, however use of Google Services through the plugin is governed by [Google's Terms of Service](http://www.google.com/policies/terms/) and [Privacy Policy](http://www.google.com/policies/privacy/). For products and services that can be used with the AdSense Plugin, such as AdSense, additional Terms of Service may also apply.
-
-== HTML5 Local Storage ==
-
-Google uses HTML5 Local Storage in the end-user's browser to record which kind of ad layout it serves to each browser; this includes the number of ads served and their position on the site. This helps Google compare ad performance across different ad layouts. The information is anonymous and is not personally identifiable. Do not use this Google-managed value for your own tracking; it may prevent the plugin from gathering reliable data about ad layouts. Your site should already include the appropriate disclosures about cookie usage, but please ensure that you [make the disclosures required by AdSense terms and conditions](https://support.google.com/adsense/answer/1348695).

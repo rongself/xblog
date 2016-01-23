@@ -4,6 +4,22 @@
  * 利用原生的PHP和WP函数写的相关函数
  */
 
+// 兼容的scandir
+function wp2pcs_scandir($dir) {
+  if(function_exists('scandir')) {
+    return scandir($dir);
+  }
+  else {
+    $handle = @opendir($dir);
+    $arr = array();
+    while(($arr[] = @readdir($handle)) !== false) {}
+    @closedir($handle);
+    $arr = array_filter($arr);
+    return $arr;
+  }
+}
+
+
 // 读取http缓存
 function wp2pcs_http_cache() {
   header("Cache-Control: private, max-age=10800, pre-check=10800");
@@ -17,7 +33,7 @@ function wp2pcs_http_cache() {
 
 // 判断cache是否存在
 function wp2pcs_has_cache($path) {
-  $path = str_replace(BAIDUPCS_REMOTE_ROOT,'',$path);
+  $path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT,'',$path);
   if(!file_exists(WP2PCS_CACHE_DIR.DIRECTORY_SEPARATOR.$path)) {// 该缓存文件不存在
     return false;
   }
@@ -25,7 +41,7 @@ function wp2pcs_has_cache($path) {
 }
 // 获取cache
 function wp2pcs_get_cache($path) {
-  $path = str_replace(BAIDUPCS_REMOTE_ROOT,'',$path);
+  $path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT,'',$path);
   $cache_file = realpath(WP2PCS_CACHE_DIR.DIRECTORY_SEPARATOR.$path);
   if(!$cache_file) {// 该缓存文件不存在
     return null;
@@ -41,7 +57,7 @@ function wp2pcs_get_cache($path) {
 
 // 添加cache
 function wp2pcs_set_cache($path,$content) {
-  $path = str_replace(BAIDUPCS_REMOTE_ROOT,'',$path);
+  $path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT,'',$path);
   $path = str_replace('/apps/wp2pcs','',$path);
   $cache_file = WP2PCS_CACHE_DIR.'/'.$path;
   if(DIRECTORY_SEPARATOR == '\\') {
@@ -72,7 +88,7 @@ function wp2pcs_set_cache($path,$content) {
 // 删除一个缓存
 function wp2pcs_delete_cache($path) {
   global $wpdb;
-  $path = str_replace(BAIDUPCS_REMOTE_ROOT,'',$path);
+  $path = str_replace(WP2PCS_BAIDUPCS_REMOTE_ROOT,'',$path);
   $cache_file = realpath(WP2PCS_CACHE_DIR.DIRECTORY_SEPARATOR.$path);
   if(!$cache_file) {
     return null;
@@ -104,15 +120,16 @@ function wp2pcs_clean_cache($dir = WP2PCS_CACHE_DIR) {
 
 // 使用get_by_curl来执行curl抓取
 if(!function_exists('get_by_curl')) :
-function get_by_curl($url,$post = false,$https = true,$referer = false,$headers = null){
+function get_by_curl($url,$post = false,$ssl = true,$referer = false,$headers = null){
   $ch = curl_init();
   curl_setopt($ch,CURLOPT_URL,$url);
   curl_setopt($ch, CURLOPT_HEADER, 0);
+  //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//安全模式下无法使用
   if($referer) {
     curl_setopt ($ch,CURLOPT_REFERER,$referer);
   }
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  if($https) {
+  if($ssl) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   }
